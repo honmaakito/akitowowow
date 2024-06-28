@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# データの読み込み（例として、CSVファイルから読み込む場合）
+# データの読み込み（例として、CSVファイルから読み込む場合a
 df = pd.read_csv('/Users/tatewakieishou/demo_streamlit_20240621/.venv/data.csv', encoding='sjis')
 
 # NaN値を列の平均値で置換
