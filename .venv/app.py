@@ -10,7 +10,7 @@ df = df.fillna(df.mean(numeric_only=True))
 df['年月日'] = pd.to_datetime(df['年月日'], dayfirst=False)
 
 # Streamlitアプリケーションの設定
-st.title("気象データの可視化")
+st.title("三木市の過去の天気")
 
 # グラフの色を指定
 colors = ['orange', 'blue']
