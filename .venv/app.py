@@ -21,7 +21,7 @@ fig = px.line(df, x='年月日', y=['最大風速(m/s)', '10分間降水量の�
 st.plotly_chart(fig)
 
 # ユーザーに日付を入力させる
-selected_date = st.date_input("日付を選択してください", pd.to_datetime('2021-06-27'))
+selected_date = st.date_input("日付を選択してください(2021/06/27~2024/06/17)", pd.to_datetime('2021-06-27'))
 
 # 入力された日付に対応するデータを検索
 selected_date_str = selected_date.strftime('%Y-%m-%d')
