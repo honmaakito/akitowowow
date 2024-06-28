@@ -17,7 +17,7 @@ colors = ['orange', 'blue']
 
 # 折れ線グラフの描画
 fig = px.line(df, x='年月日', y=['最大風速(m/s)', '10分間降水量の最大(mm)'],
-              title='雨量の折れ線グラフ', color_discrete_sequence=colors)
+              title='雨量,風量のグラフ', color_discrete_sequence=colors)
 st.plotly_chart(fig)
 
 # ユーザーに日付を入力させる
