@@ -1,39 +1,39 @@
 import streamlit as st
-import pandas as pd
-import plotly.express as px
+import torch
+from PIL import Image
+import numpy as np
+import io
 
-# データの読み込み（例として、CSVファイルから読み込む場合
-df = pd.read_csv('.venv/data.csv', encoding='sjis')
+# YOLOv5モデルの読み込み
+model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 
-# NaN値を列の平均値で置換
-df = df.fillna(df.mean(numeric_only=True))
-df['年月日'] = pd.to_datetime(df['年月日'], dayfirst=False)
+# Streamlit UIの設定
+st.title("YOLOv5物体検出アプリ")
 
-# Streamlitアプリケーションの設定
-st.title("三木市の過去の天気")
+# ユーザーに画像をアップロードさせる
+uploaded_file = st.file_uploader("画像をアップロードしてください", type=["jpg", "jpeg", "png"])
 
-# グラフの色を指定
-colors = ['orange', 'blue']
+if uploaded_file is not None:
+    # アップロードされた画像を読み込む
+    image = Image.open(uploaded_file)
 
-# 折れ線グラフの描画
-fig = px.line(df, x='年月日', y=['最大風速(m/s)', '10分間降水量の最大(mm)'],
-              title='雨量,風量のグラフ', color_discrete_sequence=colors)
-st.plotly_chart(fig)
+    # 画像を表示
+    st.image(image, caption='アップロードされた画像', use_column_width=True)
 
-# ユーザーに日付を入力させる
-selected_date = st.date_input("日付を選択してください(2021/06/27~2024/06/17)", pd.to_datetime('2021-06-27'))
+    # YOLOv5で物体検出を行う
+    st.write("物体検出中...")
 
-# 入力された日付に対応するデータを検索
-selected_date_str = selected_date.strftime('%Y-%m-%d')
-selected_data = df[df['年月日'] == selected_date_str]
+    # 画像をYOLOv5が扱える形式に変換
+    img_array = np.array(image)
 
-# 検索結果を表示
-if not selected_data.empty:
-    st.write(f"### {selected_date_str} の気象データ")
-    st.write(f"最大風速: {selected_data['最大風速(m/s)'].values[0]} m/s")
-    st.write(f"10分間降水量の最大: {selected_data['10分間降水量の最大(mm)'].values[0]} mm")
-    st.write(f"平均気温: {selected_data['平均気温(℃)'].values[0]} ℃")
-    st.write(f"最高気温: {selected_data['最高気温(℃)'].values[0]} ℃")
-    st.write(f"最低気温: {selected_data['最低気温(℃)'].values[0]} ℃")
-else:
-    st.write("選択された日付のデータは存在しません。")
+    # YOLOv5で検出
+    results = model(img_array)
+
+    # 検出結果の描画
+    results_img = results.render()[0]  # 結果を描画した画像を取得
+
+    # 検出結果の画像を表示
+    st.image(results_img, caption="物体検出結果", use_column_width=True)
+
+    # 検出された物体をテキストで表示
+    st.write("検出された物体:", results.pandas().xyxy[0])
