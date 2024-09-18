@@ -1,4 +1,4 @@
-# 2024/09/13 TeamTrashBox
+# 2024/09/13 TeamTrashBox akito
 
 import streamlit as st
 import torch
